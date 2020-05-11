@@ -6,6 +6,7 @@ from multiprocessing import Queue
 import threading
 import random
 from time import sleep
+import time
 
 User_Agent = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36",
@@ -72,6 +73,10 @@ def getType(type, url):
         address = sight_item['data-address']
         data_id = sight_item['data-id']
         level = sight_item.find('span', attrs={'class': 'level'})
+        img = sight_item['data-sight-img-u-r-l']
+        salenum=sight_item.find('span', attrs={'class': 'hot_num'}).text
+        now_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        city_now=districts[0:districts.find('·')]
         if level:
             level = level.text
         else:
@@ -89,16 +94,16 @@ def getType(type, url):
         writer.writerow(
             [districts.replace("\n", ""), name.replace("\n", ""), data_id.replace("\n", ""), type.replace("\n", ""),
              level.replace("\n", ""), product_star_level.replace("\n", ""), address.replace("\n", ""),
-             intro.replace("\n", ""), point.replace("\n", "")])
+             intro.replace("\n", ""), point.replace("\n", ""), img, salenum, now_time, city_now])
     next = soup.find('a', attrs={'class': 'next'})
     if next:
         next_url = "http://piao.qunar.com" + next['href']
         getType(type, next_url)
 
-def getTypeDetail(type, url):
-    soup = download_soup_waitting(url)
-    search_list = soup.find('div', attrs={'id': 'search-list'})
-    sight_items = search_list.findAll('div', attrs={'class': 'sight_item'})
+# def getTypeDetail(type, url):
+#     soup = download_soup_waitting(url)
+#     search_list = soup.find('div', attrs={'id': 'search-list'})
+#     sight_items = search_list.findAll('div', attrs={'class': 'sight_item'})
 
 
 
